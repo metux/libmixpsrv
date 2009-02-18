@@ -32,7 +32,7 @@ static void p9srv_clone_files(MIXPSRV_FILE_HANDLE *f) {
 		assert(f->nref++);
 }
 
-void p9srv_ops_walk(Ixp9Req *r) 
+void p9srv_ops_walk(Ixp9Req *r)
 {
 	MIXPSRV_FILE_HANDLE *f, *nf;
 	int i;
@@ -236,7 +236,7 @@ void p9srv_ops_stat(Ixp9Req *r)
 
 	/* run our actual stat() call */
 	mixpsrv_call_ops_stat(f, &s);
-	
+
 	/* prepare Rstat ofcall */
 	r->ofcall->Rstat.nstat = size = mixp_stat_sizeof(&s);
 	r->ofcall->Rstat.stat  = buf  = calloc(1,size);
@@ -269,14 +269,14 @@ void p9srv_ops_read_dir(Ixp9Req *r, MIXPSRV_FILE_HANDLE* f)
 		tf = f = f->ops.lookup(f, NULL);
 	else
 		tf = f = NULL;
-		
+
 	if (f != NULL)
 	{
 		/* OLD-Note: f->tab.name == "." so we skip it */
 		for(f=tf; f; f=f->next) 
 		{
 			int n = 0;
-		
+
 			// Skip the "." and ".." entries
 			if (!(f->name))
 			{
@@ -314,7 +314,7 @@ void p9srv_ops_read_dir(Ixp9Req *r, MIXPSRV_FILE_HANDLE* f)
 				offset += n;
 			}
 		}
-		while((f = tf)) 
+		while((f = tf))
 		{
 			tf=tf->next;
 			p9srv_free_file(f);
@@ -350,7 +350,7 @@ void p9srv_ops_read_plain(Ixp9Req* r, MIXPSRV_FILE_HANDLE* f)
 	}
 	else
 		r->ofcall->Rread.count = ret;
-		    
+
 	ixp_respond(r, NULL);
 }
 
@@ -379,7 +379,7 @@ void p9srv_ops_read(Ixp9Req *r)
 MIXPSRV_FILE_HANDLE * p9srv_get_file()
 {
 	MIXPSRV_FILE_HANDLE *temp;
-	if(!free_fileid) 
+	if(!free_fileid)
 	{
 		unsigned int i = 15;
 		temp = calloc(1,sizeof(MIXPSRV_FILE_HANDLE) * i);

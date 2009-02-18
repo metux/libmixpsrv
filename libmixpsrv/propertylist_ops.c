@@ -19,17 +19,20 @@
 static MIXPSRV_FILE_HANDLE* mixp_propertylist_ops_lookup  (MIXPSRV_FILE_HANDLE* f, char* name);
 static int                  mixp_propertylist_ops_stat    (MIXPSRV_FILE_HANDLE* f, MIXP_STAT* stat);
 static long                 mixp_propertylist_ops_size    (MIXPSRV_FILE_HANDLE* f);
+static int                  mixp_propertylist_ops_close   (MIXPSRV_FILE_HANDLE* f);
 static long                 mixp_propertylist_entops_read (MIXPSRV_FILE_HANDLE* f, long offset, size_t size, void* buf);
 static long                 mixp_propertylist_entops_write(MIXPSRV_FILE_HANDLE* f, long offset, size_t size, void* buf);
 static int                  mixp_propertylist_entops_open (MIXPSRV_FILE_HANDLE* f, long mode);
 static int                  mixp_propertylist_entops_stat (MIXPSRV_FILE_HANDLE* f, MIXP_STAT* stat);
 static long                 mixp_propertylist_entops_size (MIXPSRV_FILE_HANDLE* f);
+static int                  mixp_propertylist_entops_close(MIXPSRV_FILE_HANDLE* f);
 
 static MIXPSRV_FILE_OPS propertylist_ops = 
 {
     .lookup = mixp_propertylist_ops_lookup,
     .stat   = mixp_propertylist_ops_stat,
-    .size   = mixp_propertylist_ops_size
+    .size   = mixp_propertylist_ops_size,
+    .close  = mixp_propertylist_ops_close
 };
 
 static MIXPSRV_FILE_OPS propertylist_entops = 
@@ -38,7 +41,8 @@ static MIXPSRV_FILE_OPS propertylist_entops =
     .write = mixp_propertylist_entops_write,
     .open  = mixp_propertylist_entops_open,
     .stat  = mixp_propertylist_entops_stat,
-    .size  = mixp_propertylist_entops_size
+    .size  = mixp_propertylist_entops_size,
+    .close = mixp_propertylist_entops_close
 };
 
 MIXPSRV_FILE_HANDLE* mixp_propertylist_create(const char* name, MIXP_PROPERTYLIST_DEF* pr)
@@ -73,6 +77,13 @@ static MIXPSRV_FILE_HANDLE* mixp_propertylist_createent(MIXP_PROPERTYLIST_DEF* p
     f->priv.text = (char*)ent;
     f->ops       = propertylist_entops;
     return f;
+}
+
+// FIXME: not really necessary
+static int  mixp_propertylist_ops_close(MIXPSRV_FILE_HANDLE* f)
+{
+    fprintf(stderr,"mixp_propertylist_ops_close()\n");
+    return 1;
 }
 
 static long mixp_propertylist_ops_size(MIXPSRV_FILE_HANDLE *f)
@@ -368,6 +379,17 @@ static long mixp_propertylist_entops_size(MIXPSRV_FILE_HANDLE* f)
     buffer[0] = 0;
     mixp_propertylist_entops_read(f, 0, sizeof(buffer)-1, buffer);
     return strlen(buffer);
+}
+
+static int mixp_propertylist_entops_close(MIXPSRV_FILE_HANDLE* f)
+{
+    fprintf(stderr,"mixp_propertylist_entops_close()\n");
+    if (f->name)
+    {
+	free(f->name);
+	f->name = NULL;
+    }
+    return 1;
 }
 
 static int mixp_propertylist_entops_open(MIXPSRV_FILE_HANDLE* f, long mode)

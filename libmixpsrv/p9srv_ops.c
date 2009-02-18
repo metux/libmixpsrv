@@ -41,7 +41,7 @@ void p9srv_ops_walk(Ixp9Req *r)
 	p9srv_clone_files(f);
 	for(i=0; i < r->ifcall->Twalk.nwname; i++) 
 	{
-		if(!strncmp(r->ifcall->Twalk.wname[i], "..", 3)) 
+		if(!strncmp(r->ifcall->Twalk.wname[i], "..", 3))
 		{
 			if(f->next) {
 				nf=f;
@@ -166,7 +166,7 @@ void p9srv_ops_remove(Ixp9Req *r)
 
 	if (f->ops.unlink)
 	    ret = f->ops.unlink(f);
-	    
+
 	switch (ret)
 	{
 	    case '0':	 ixp_respond(r,NULL);			break;
@@ -175,14 +175,14 @@ void p9srv_ops_remove(Ixp9Req *r)
 	}
 }
 
-void p9srv_ops_clunk(Ixp9Req *r) 
+void p9srv_ops_clunk(Ixp9Req *r)
 {
-	fprintf(stderr,"p9srv_ops_clunk: clunk not implemented yet\n");
-//	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
+	// We actually don't have to do anything here. ixp_respond() will take
+	// care of all (calling freefid, etc).
 	ixp_respond(r, NULL);
 }
 
-void p9srv_ops_flush(Ixp9Req *r) 
+void p9srv_ops_flush(Ixp9Req *r)
 {
 	fprintf(stderr,"p9srv_ops_flush: flush not implemented yet\n");
 //	Ixp9Req **t;
@@ -197,7 +197,7 @@ void p9srv_ops_flush(Ixp9Req *r)
 	ixp_respond(r, NULL);
 }
 
-void p9srv_ops_freefid(IxpFid *f) 
+void p9srv_ops_freefid(IxpFid *f)
 {
 	MIXPSRV_FILE_HANDLE *id, *tid;
 
@@ -207,10 +207,14 @@ void p9srv_ops_freefid(IxpFid *f)
 	}
 }
 
-void p9srv_free_file(MIXPSRV_FILE_HANDLE *f) 
+void p9srv_free_file(MIXPSRV_FILE_HANDLE *f)
 {
 	if(--f->nref)
 		return;
+
+	// call the file handle's close operation first
+	mixpsrv_call_ops_close(f);
+
 	if (f->name)
 	{
 		free(f->name);
@@ -220,7 +224,7 @@ void p9srv_free_file(MIXPSRV_FILE_HANDLE *f)
 	free_fileid = f;
 }
 
-void p9srv_ops_stat(Ixp9Req *r) 
+void p9srv_ops_stat(Ixp9Req *r)
 {
 	MIXP_STAT s;
 	unsigned int size;

@@ -53,6 +53,12 @@ long mixpsrv_default_ops_size(MIXPSRV_FILE_HANDLE* f)
     return 0;
 }
 
+int mixpsrv_default_ops_close(MIXPSRV_FILE_HANDLE* f)
+{
+    fprintf(stderr,"mixpsrv_default_ops_close(): close unsupported\n");
+    return 0;
+}
+
 int mixpsrv_default_ops_stat(MIXPSRV_FILE_HANDLE* f, MIXP_STAT *s) 
 {
     s->type        = 0;

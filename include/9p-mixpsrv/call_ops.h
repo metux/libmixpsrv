@@ -47,4 +47,12 @@ static inline int mixpsrv_call_ops_stat(MIXPSRV_FILE_HANDLE* f, MIXP_STAT* s)
 	return f->ops.stat(f, s);
 }
 
+static inline int mixpsrv_call_ops_close(MIXPSRV_FILE_HANDLE* f)
+{
+    if (f->ops.close == NULL)
+	return mixpsrv_default_ops_close(f);
+    else
+	return f->ops.close(f);
+}
+
 #endif

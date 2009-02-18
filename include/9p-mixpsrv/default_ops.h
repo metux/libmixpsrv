@@ -11,6 +11,7 @@ long mixpsrv_default_ops_read(MIXPSRV_FILE_HANDLE* f, long offset, size_t size, 
 long mixpsrv_default_ops_write(MIXPSRV_FILE_HANDLE* f, long offset, size_t size, void* buf);
 long mixpsrv_default_ops_size(MIXPSRV_FILE_HANDLE* f);
 int  mixpsrv_default_ops_stat(MIXPSRV_FILE_HANDLE* f, MIXP_STAT* s);
+int  mixpsrv_default_ops_close(MIXPSRV_FILE_HANDLE* f);
 
 extern MIXPSRV_FILE_OPS mixp_default_fileops;
 

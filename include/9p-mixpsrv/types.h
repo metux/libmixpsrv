@@ -37,6 +37,7 @@ struct _MIXPSRV_FILE_OPS {
 	long         (*read)(MIXPSRV_FILE_HANDLE* f, long offset, size_t size, void* buffer);
 	long         (*write)(MIXPSRV_FILE_HANDLE* f, long offset, size_t size, void* buffer);
         int          (*stat)(MIXPSRV_FILE_HANDLE* f, MIXP_STAT* stat);
+	int          (*close)(MIXPSRV_FILE_HANDLE* f);
 };
 
 struct MIXPSRV_FILE_HANDLE {

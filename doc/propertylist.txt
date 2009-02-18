@@ -1,0 +1,10 @@
+
+Some notes about property lists.
+
+
+== Entry types ==
+
+=== P9_PL_LONG_PTR ====
+
+* The ''value'' field an pointer to an long field
+* If the ptr is NULL, the propertylist's getInt() proc is queried

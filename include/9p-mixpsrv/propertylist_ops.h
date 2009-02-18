@@ -17,11 +17,12 @@ typedef enum
     P9_PL_DIR       = 3,
     P9_PL_FILE      = 4,
     P9_PL_INT_VAL   = 5,		// just like INT, but the integer value is stored as long
-    P9_PL_FLOAT_VAL = 6
+    P9_PL_FLOAT_VAL = 6,
+    P9_PL_LONG_PTR  = 7,		// pointer to an long value
 } MIXP_PROPERTYLIST_ENT_TYPE;
 
 #define MIXP_PROPERTYLIST_ENTRY_ATTR_AUTOFREE	1
-    
+
 struct _MIXP_PROPERTYLIST_ENT
 {
     int                        id;		// ID (for user only)
@@ -72,6 +73,14 @@ MIXP_PROPERTYLIST_DEF* mixp_propertylist_create_def(
 	.name	= n,			\
 	.type	= P9_PL_INT,		\
 	.id	= i			\
+    }
+
+// declare an P9_PL_LONG_PTR with ID but no value
+#define _MIXP_PL_DECL_LONG_PTR(n,v)	\
+    {					\
+	.name	= n,			\
+	.type	= P9_PL_LONG_PTR,	\
+	.value	= (char*)v		\
     }
 
 // declare an P9_PL_STRING with ID but no value

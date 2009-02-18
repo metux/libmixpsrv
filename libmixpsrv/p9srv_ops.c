@@ -245,7 +245,7 @@ void p9srv_ops_stat(Ixp9Req *r)
 	msg = mixp_message(buf,size,MsgPack);
 	mixp_pstat(&msg, &s);
 
-	/* send response */	
+	/* send response */
 	ixp_respond(r, NULL);
 }
 

@@ -266,6 +266,53 @@ static long _entops_read_intval(MIXP_PROPERTYLIST_DEF* def, MIXP_PROPERTYLIST_EN
     return snprintf(buf,size-1,"%ld",ret);
 }
 
+// generic handling for all integer types
+static long _entops_read_integer(MIXP_PROPERTYLIST_DEF* def, MIXP_PROPERTYLIST_ENT* ent, long offset, size_t size, void* buf)
+{
+    if (offset)
+    {
+	fprintf(stderr,"read_integer() does not support offsets (%ld)\n", offset);
+	return 0;
+    }
+
+    int  success = 0;
+    long value;
+
+    // do the type-dependent retrieval
+    switch (ent->type)
+    {
+	// long ptr behaviour
+	case P9_PL_LONG_PTR:
+	    if (ent->value != NULL)
+	    {
+		value = *((long*)(ent->value));
+		success = 1;
+		fprintf(stderr,"GOT LONGPTR \"%s\" -> %ld\n", ent->name, value);
+	    }
+	break;
+
+	default:
+	    fprintf(stderr,"[BUG] _entops_read_integer(): unhandled type: %d\n", ent->type);
+    }
+
+    // direct attempts failed - try the getInt() proc
+    if ((!success) && (def->ops.getInt != NULL))
+    {
+	def->ops.getInt(def,ent,&value);
+	success = 1;				// FIXME! should check the getInt() return value
+    }
+
+    // still failed -> return error
+    if (!success)
+    {
+	fprintf(stderr,"mixp_propertylist::read_integer: getInt() failed for \"%s\"\n", ent->name);
+	return 0;
+    }
+
+    return snprintf(buf,size-1,"%ld",value);
+}
+
+// FIXME: should be replaced by generic _entops_read_integer()
 static long _entops_read_int(MIXP_PROPERTYLIST_DEF* def, MIXP_PROPERTYLIST_ENT* ent, long offset, size_t size, void* buf)
 {
     // check if we have an constant value
@@ -361,10 +408,11 @@ static long mixp_propertylist_entops_read(MIXPSRV_FILE_HANDLE* f, long offset, s
     memset(buf,0,size);
     switch (ent->type)
     {
-	case P9_PL_STRING:	return _entops_read_string (def, ent, offset, size, buf);
-	case P9_PL_INT:		return _entops_read_int    (def, ent, offset, size, buf);
-	case P9_PL_INT_VAL:	return _entops_read_intval (def, ent, offset, size, buf);
-	case P9_PL_DIR:		return _entops_read_dir    (def, ent, offset, size, buf);
+	case P9_PL_STRING:	return _entops_read_string  (def, ent, offset, size, buf);
+	case P9_PL_INT:		return _entops_read_int     (def, ent, offset, size, buf);
+	case P9_PL_INT_VAL:	return _entops_read_intval  (def, ent, offset, size, buf);
+	case P9_PL_LONG_PTR:	return _entops_read_integer (def, ent, offset, size, buf);
+	case P9_PL_DIR:		return _entops_read_dir     (def, ent, offset, size, buf);
 	default:
 	    fprintf(stderr,"ixp_propertylist_entops_read() unsupported entry type %ud\n", ent->type);
 	    return 0;

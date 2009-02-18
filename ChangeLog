@@ -1,18 +1,25 @@
 
+---- 0.0.1.3 release ----
+
+2008-05-20	Enrico Weigelt, metux IT service <weigelt@metux.de>
+
+    * added generic integer handling and P9_PL_LONG_PTR type
+    * added some lines of doc (far from being complete ;-o)
+
 ---- 0.0.1.2 release ----
 
-2008-05-20:	Enrico Weigelt <weigelt@metux.de>
+2008-05-20:	Enrico Weigelt, metux IT service <weigelt@metux.de>
 
     * added a few macros for more convenient propertylist entry declaration
     * added new include file server.h and mixp_9pserver_run_server
 
-2008-05-16:	Enrico Weigelt <weigelt@metux.de>
+2008-05-16:	Enrico Weigelt, metux IT service <weigelt@metux.de>
 
     * fixed missing soname
 
 ---- 0.0.1.1 release ----
 
-2008-04-01:	Enrico Weigelt <weigelt@metux.de>
+2008-04-01:	Enrico Weigelt, metux IT service <weigelt@metux.de>
 
     * Added close() file operation, which is called from freefid() just before
       a fid is free'd. So now files are *really* closed on clunk.

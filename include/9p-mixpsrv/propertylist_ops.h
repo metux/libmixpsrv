@@ -66,4 +66,36 @@ MIXP_PROPERTYLIST_DEF* mixp_propertylist_create_def(
     void* private
 );
 
+// declare an P9_PL_INT with ID but no value
+#define _MIXP_PL_DECL_INT_ID(n,i)	\
+    {					\
+	.name	= n,			\
+	.type	= P9_PL_INT,		\
+	.id	= i			\
+    }
+
+// declare an P9_PL_STRING with ID but no value
+#define _MIXP_PL_DECL_STRING_ID(n,i)	\
+    {					\
+	.name	= n,			\
+	.type	= P9_PL_STRING,		\
+	.id	= i			\
+    }
+
+// declare an P9_PL_STRING with constant value (no ID)
+#define _MIXP_PL_DECL_STRING_CONST(n,v)	\
+    {					\
+	.name	= n,			\
+	.type	= P9_PL_STRING,		\
+	.value	= v			\
+    }
+
+// declare an P9_PL_DIR with an getFileHandle() proc
+#define _MIXP_PL_DECL_DIR_PROC(n,p)	\
+    {					\
+	.name		= n,		\
+	.type		= P9_PL_DIR,	\
+	.getFileHandle	= p		\
+    }
+
 #endif

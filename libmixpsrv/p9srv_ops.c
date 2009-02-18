@@ -94,13 +94,13 @@ void p9srv_ops_walk(Ixp9Req *r)
 	ixp_respond(r, NULL);
 }
 
-unsigned int p9srv_ops_size(MIXPSRV_FILE_HANDLE *f) 
+unsigned int p9srv_ops_size(MIXPSRV_FILE_HANDLE *f)
 {
 	return mixpsrv_call_ops_size(f);
 }
 
 /* This function needs to be seriously cleaned up */
-void p9srv_ops_write(Ixp9Req *r) 
+void p9srv_ops_write(Ixp9Req *r)
 {
 	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
 	int ret = mixpsrv_call_ops_write(f,r->ifcall->Twrite.offset,r->ifcall->Twrite.count,r->ifcall->Twrite.data);
@@ -114,7 +114,7 @@ void p9srv_ops_write(Ixp9Req *r)
 	}
 	else
 	{
-	    r->ofcall->Rwrite.count = ret;	    
+	    r->ofcall->Rwrite.count = ret;
 	    ixp_respond(r, NULL);
 	}
 	return;
@@ -124,7 +124,7 @@ void p9srv_ops_write(Ixp9Req *r)
 	assert(!"Write called on an unwritable file");
 }
 
-void p9srv_ops_open(Ixp9Req *r) 
+void p9srv_ops_open(Ixp9Req *r)
 {
 	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
 
@@ -150,7 +150,7 @@ void p9srv_ops_open(Ixp9Req *r)
 }
 
 // FIXME: create is not implemented yet
-void p9srv_ops_create(Ixp9Req *r) 
+void p9srv_ops_create(Ixp9Req *r)
 {
 //	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
 
@@ -159,7 +159,7 @@ void p9srv_ops_create(Ixp9Req *r)
 	return;
 }
 
-void p9srv_ops_remove(Ixp9Req *r) 
+void p9srv_ops_remove(Ixp9Req *r)
 {
 	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
 	int ret = -EPERM;
@@ -354,7 +354,7 @@ void p9srv_ops_read_plain(Ixp9Req* r, MIXPSRV_FILE_HANDLE* f)
 	ixp_respond(r, NULL);
 }
 
-void p9srv_ops_read(Ixp9Req *r) 
+void p9srv_ops_read(Ixp9Req *r)
 {
 	MIXPSRV_FILE_HANDLE *f;
 
@@ -376,7 +376,7 @@ void p9srv_ops_read(Ixp9Req *r)
 	    p9srv_ops_read_plain(r, f);
 }
 
-MIXPSRV_FILE_HANDLE * p9srv_get_file() 
+MIXPSRV_FILE_HANDLE * p9srv_get_file()
 {
 	MIXPSRV_FILE_HANDLE *temp;
 	if(!free_fileid) 
@@ -396,7 +396,7 @@ MIXPSRV_FILE_HANDLE * p9srv_get_file()
 	return temp;
 }
 
-void p9srv_ops_attach(Ixp9Req *r) 
+void p9srv_ops_attach(Ixp9Req *r)
 {	
 	printf("p9srv_ops_attach()\n");
 
@@ -421,6 +421,7 @@ int p9srv_run_server(int fd, MIXPSRV_FILESERVER* fspriv)
 	Ixp9Srv   my_p9srv = p9srv_ops;
 	MIXP_SERVER my_srv;
 
+	memset(&my_srv,0,sizeof(my_srv));
 	fspriv->magic = MIXPSRV_FILESERVER_MAGIC;
 	my_p9srv.aux = fspriv;
 	ixp_listen(&my_srv, fd, &my_p9srv, serve_9pcon, NULL);

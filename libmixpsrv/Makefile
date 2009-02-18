@@ -2,7 +2,7 @@
 SONAME=mixpsrv
 
 #SRCNAMES  = default_ops hostfile_ops ixp_util p9srv_ops rostring_ops propertylist_ops union_ops
-SRCNAMES  = default_ops hostfile_ops ixp_util p9srv_ops rostring_ops propertylist_ops mvfs_ops
+SRCNAMES  = default_ops hostfile_ops ixp_util p9srv_ops rostring_ops propertylist_ops mvfs_ops server
 NOPIC_OBJ = $(addsuffix .nopic.o, $(SRCNAMES))
 PIC_OBJ   = $(addsuffix .pic.o, $(SRCNAMES))
 

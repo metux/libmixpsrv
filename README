@@ -1,0 +1,5 @@
+
+Some notes about FileOps handlers:
+
+    * lookup() may get passed an NULL name ! 
+      in this case, the root dir / current dir is requested

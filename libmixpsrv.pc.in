@@ -1,0 +1,11 @@
+prefix=@PREFIX@
+exec_prefix=${prefix}
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: libmixp
+Description: 9P2000 server library
+Requires: libmixp
+Version: @VERSION@
+Libs: -L${libdir} -lmixpsrv
+Cflags: -I${includedir}

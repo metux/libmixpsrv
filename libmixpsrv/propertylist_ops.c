@@ -287,6 +287,7 @@ static long _entops_read_integer(MIXP_PROPERTYLIST_DEF* def, MIXP_PROPERTYLIST_E
 	    {
 		value = *((long*)(ent->value));
 		success = 1;
+		fprintf(stderr,"GOT LONGPTR \"%s\" -> %ld\n", ent->name, value);
 	    }
 	break;
 

@@ -1,7 +1,4 @@
 
-// UNUSABLE FOR NOW !
-// will not be built 
-
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>

@@ -49,6 +49,7 @@ struct MIXPSRV_FILE_HANDLE {
 	unsigned int    type;
 
 	int		perm;
+	int 		async;
 	MIXPSRV_FILE_OPS	ops;
 	
 	// private fields - reserved for the ops handlers

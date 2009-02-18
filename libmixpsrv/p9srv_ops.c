@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <inttypes.h>
+#include <pthread.h>
 
 #include <9p-mixp/mixp.h>
 #include <9p-mixp/convert.h>
@@ -39,7 +40,7 @@ void p9srv_ops_walk(Ixp9Req *r)
 
 	f = r->fid->aux;
 	p9srv_clone_files(f);
-	for(i=0; i < r->ifcall->Twalk.nwname; i++) 
+	for(i=0; i < r->ifcall->Twalk.nwname; i++)
 	{
 		if(!strncmp(r->ifcall->Twalk.wname[i], "..", 3))
 		{
@@ -240,7 +241,7 @@ void p9srv_ops_stat(Ixp9Req *r)
 	/* prepare Rstat ofcall */
 	r->ofcall->Rstat.nstat = size = mixp_stat_sizeof(&s);
 	r->ofcall->Rstat.stat  = buf  = calloc(1,size);
-	
+
 	/* build the message payload */
 	msg = mixp_message(buf,size,MsgPack);
 	mixp_pstat(&msg, &s);
@@ -293,7 +294,7 @@ void p9srv_ops_read_dir(Ixp9Req *r, MIXPSRV_FILE_HANDLE* f)
 				mixpsrv_call_ops_stat(f,&s);
 
 				n = mixp_stat_sizeof(&s);
-				if(offset >= r->ifcall->Tread.offset) 
+				if(offset >= r->ifcall->Tread.offset)
 				{
 					if ((written+n) > size)
 					{
@@ -354,9 +355,9 @@ void p9srv_ops_read_plain(Ixp9Req* r, MIXPSRV_FILE_HANDLE* f)
 	ixp_respond(r, NULL);
 }
 
-void p9srv_ops_read(Ixp9Req *r)
+static void _real_ops_read(Ixp9Req* r)
 {
-	MIXPSRV_FILE_HANDLE *f;
+	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
 
 	if (r->ifcall->Tread.count < 1)
 	{
@@ -374,6 +375,46 @@ void p9srv_ops_read(Ixp9Req *r)
 	    p9srv_ops_read_dir(r, f);
 	else
 	    p9srv_ops_read_plain(r, f);
+}
+
+
+#define MAX_THREADS	128
+
+static int       threads_initialized = 0;
+static int       threads_cnt = 0;
+static pthread_t threads[MAX_THREADS];
+
+static void initthreads()
+{
+    if (threads_initialized)
+	return;
+    memset(&threads,0,sizeof(threads));
+}
+
+static void* _thread_read(void* param)
+{
+    Ixp9Req* r = (Ixp9Req*)param;
+    fprintf(stderr,"_thread_read() processing read request ...\n");
+    _real_ops_read(r);
+    fprintf(stderr,"_thread_read() done read request\n");
+    return NULL;
+}
+
+void p9srv_ops_read(Ixp9Req *r)
+{
+    MIXPSRV_FILE_HANDLE *f = r->fid->aux;
+    if (f->async)
+    {
+	fprintf(stderr,"File should run async\n");
+	int res = pthread_create(&(threads[threads_cnt]), NULL, &_thread_read, r);
+//	fprintf(stderr,"thread_id: %ld\n", threads[threads_cnt]);
+	if (res)
+	    fprintf(stderr,"thread creation failed: %d\n", res);
+
+	threads_cnt++;
+    }
+    else
+	_real_ops_read(r);
 }
 
 MIXPSRV_FILE_HANDLE * p9srv_get_file()

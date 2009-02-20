@@ -29,7 +29,7 @@ struct _MIXP_PROPERTYLIST_ENT
     const char*                name;		// NULL means: last entry in list
     const char*                value;		// NULL means: ask the getValue() proc
     long long                  int_value;	// for PL_INTVAL:   first try to ask getValue(), if none take this
-    float	               float_value;	// for PL_FLOATVAL: first try to ask getValue(), if none take this 
+    float	               float_value;	// for PL_FLOATVAL: first try to ask getValue(), if none take this
     MIXP_PROPERTYLIST_ENT_TYPE type;
     void*                      priv;		// private data
     const char*                uid;		// User-ID (NULL to use default)
@@ -37,7 +37,7 @@ struct _MIXP_PROPERTYLIST_ENT
     MIXPSRV_FILE_HANDLE* (*getFileHandle)(MIXP_PROPERTYLIST_DEF* def, MIXP_PROPERTYLIST_ENT* ent);
 };
 
-typedef struct 
+typedef struct
 {
     int         (*free)     (MIXP_PROPERTYLIST_DEF* def);
     int         (*getInt)   (MIXP_PROPERTYLIST_DEF* def, MIXP_PROPERTYLIST_ENT* ent, long* ret);
@@ -105,6 +105,12 @@ MIXP_PROPERTYLIST_DEF* mixp_propertylist_create_def(
 	.name		= n,		\
 	.type		= P9_PL_DIR,	\
 	.getFileHandle	= p		\
+    }
+
+// declare an end-of-list
+#define _MIXP_PL_DECL_END		\
+    {					\
+	.name		= NULL		\
     }
 
 #endif

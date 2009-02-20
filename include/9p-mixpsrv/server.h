@@ -7,7 +7,7 @@
 const char* mixp_9pserver_run_tcp(
     const char* hostname,
     int port,
-    MIXPSRV_FILE_HANDLE*(*openroot)(),
+    MIXPSRV_FILE_HANDLE*(*openroot)(MIXPSRV_FILESERVER*),
     void* priv
 );
 

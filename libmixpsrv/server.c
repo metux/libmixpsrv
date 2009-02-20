@@ -5,16 +5,19 @@
 #include <9p-mixpsrv/p9srv.h>
 
 const char* mixp_9pserver_run_tcp(
-    const char* addr, 
+    const char* addr,
     int port,
-    MIXPSRV_FILE_HANDLE*(*openroot)(),
+    MIXPSRV_FILE_HANDLE*(*openroot)(MIXPSRV_FILESERVER*),
     void* priv
     )
 {
     char* errstr = NULL;
     MIXPSRV_FILESERVER fileserv = {
 	.magic		= MIXPSRV_FILESERVER_MAGIC,
-	.openRoot	= openroot
+	.openRoot	= openroot,
+	.priv = {
+	    .ptr = priv
+	}
     };
 
     int fd = ixp_serversock_tcp(addr, port, &errstr);

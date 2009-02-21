@@ -512,3 +512,8 @@ MIXP_PROPERTYLIST_DEF* mixp_propertylist_create_def(
     def->gid     = strdup(gid);
     return def;
 }
+
+MIXPSRV_FILE_HANDLE* mixp_propertylist_fsop_openroot_def(MIXPSRV_FILESERVER* srv)
+{
+    return mixp_propertylist_create("/", (MIXP_PROPERTYLIST_DEF*)srv->priv.ptr);
+}

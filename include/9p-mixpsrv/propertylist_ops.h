@@ -113,4 +113,12 @@ MIXP_PROPERTYLIST_DEF* mixp_propertylist_create_def(
 	.name		= NULL		\
     }
 
+/* default openRoot() handler for an propertylist-based fileserver
+
+   to use it, pass the MIXP_PROPERTYLIST_DEF structure as the priv pointer
+   and that function as openRoot in the MIXPSRV_FILESERVER structure
+*/
+
+MIXPSRV_FILE_HANDLE* mixp_propertylist_fsop_openroot_def(MIXPSRV_FILESERVER* srv);
+
 #endif

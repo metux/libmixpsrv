@@ -22,16 +22,16 @@ struct MIXPSRV_FILESERVER {
 	int refcount;
 	struct
 	{
-	    char* text;	
+	    char* text;
 	    void* ptr;
 	    int   status;
 	} priv;
 };
 
 struct _MIXPSRV_FILE_OPS {
-	char*        classname;
+	const char*  classname;
 	int          (*open)(MIXPSRV_FILE_HANDLE* f, long mode);
-	MIXPSRV_FILE_HANDLE*  (*lookup)(MIXPSRV_FILE_HANDLE* parent, char *name);
+	MIXPSRV_FILE_HANDLE*  (*lookup)(MIXPSRV_FILE_HANDLE* parent, const char *name);
 	long         (*size)(MIXPSRV_FILE_HANDLE* f);
 	int          (*unlink)(MIXPSRV_FILE_HANDLE* f);
 	long         (*read)(MIXPSRV_FILE_HANDLE* f, long offset, size_t size, void* buffer);

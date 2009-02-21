@@ -15,7 +15,7 @@
 #define PROPLISTPRIV(f)		((MIXP_PROPERTYLIST_DEF*)(f->priv.name))
 #define PROPENTPRIV(f)		((MIXP_PROPERTYLIST_DEF*)(f->priv.text))
 
-static MIXPSRV_FILE_HANDLE* mixp_mvfs_ops_lookup  (MIXPSRV_FILE_HANDLE* f, char* name);
+static MIXPSRV_FILE_HANDLE* mixp_mvfs_ops_lookup  (MIXPSRV_FILE_HANDLE* f, const char* name);
 static int                  mixp_mvfs_ops_stat    (MIXPSRV_FILE_HANDLE* f, MIXP_STAT* stat);
 static long                 mixp_mvfs_ops_size    (MIXPSRV_FILE_HANDLE* f);
 static long                 mixp_mvfs_entops_read (MIXPSRV_FILE_HANDLE* f, long offset, size_t size, void* buf);
@@ -117,7 +117,7 @@ static inline MIXPSRV_FILE_HANDLE* mixp_mvfs_ops_lookup_ent(MIXP_PROPERTYLIST_DE
     return NULL;
 }
 
-static MIXPSRV_FILE_HANDLE* mixp_mvfs_ops_lookup(MIXPSRV_FILE_HANDLE* f, char* name)
+static MIXPSRV_FILE_HANDLE* mixp_mvfs_ops_lookup(MIXPSRV_FILE_HANDLE* f, const char* name)
 {
 #ifdef _DEBUG
     printf("mixp_mvfs_ops_lookup()\n");

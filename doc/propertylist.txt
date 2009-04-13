@@ -8,3 +8,13 @@ Some notes about property lists.
 
 * The ''value'' field an pointer to an long field
 * If the ptr is NULL, the propertylist's getInt() proc is queried
+
+=== P9_INT_VAL ===
+
+Represents an integer value.
+
+An read operation tries in the following order:
+
+#1: getInt() operation
+#2: value field (as char*)
+#3: int_value (as int)

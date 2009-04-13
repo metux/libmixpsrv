@@ -15,11 +15,11 @@ int mixpsrv_default_ops_open(MIXPSRV_FILE_HANDLE* f, long mode)
 	/* if we don't have an own open() function, this is the default */
 	if((mode&3) == P9_OEXEC) 
 	{
-		printf("1\n");
+//		printf("1\n");
 		return -EPERM;
 	}
 	if((mode&3) != P9_OREAD && !(f->perm & 0200)) {
-		printf("2\n");
+//		printf("2\n");
 		return -EPERM;
 	}
 //	if((mode&3) != P9_OWRITE && !(f->tab.perm & 0400)) {
@@ -27,7 +27,7 @@ int mixpsrv_default_ops_open(MIXPSRV_FILE_HANDLE* f, long mode)
 //		return -EPERM;
 //	}
 	if((mode&~(3|P9_OAPPEND|P9_OTRUNC))) {
-		printf("4\n");
+//		printf("4\n");
 		return -EPERM;
 	}
 	return 0;
@@ -35,7 +35,7 @@ int mixpsrv_default_ops_open(MIXPSRV_FILE_HANDLE* f, long mode)
 
 long mixpsrv_default_ops_read(MIXPSRV_FILE_HANDLE* f, long offset, size_t size, void* buffer)
 {
-    printf("mixp_defaultops_read() no data.\n");
+//    printf("mixp_defaultops_read() no data.\n");
     return 0;
 }
 

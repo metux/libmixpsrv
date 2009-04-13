@@ -17,7 +17,7 @@ typedef enum
     P9_PL_DIR    = 3,
     P9_PL_FILE   = 4
 } IXP_UNION_ENT_TYPE;
-    
+
 struct _IXP_UNION_ENT
 {
     const char*        name;

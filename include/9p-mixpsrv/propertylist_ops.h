@@ -75,6 +75,14 @@ MIXP_PROPERTYLIST_DEF* mixp_propertylist_create_def(
 	.id	= i			\
     }
 
+// declare an P9_PL_INT_VAL with value but no ID
+#define _MIXP_PL_DECL_INT_CONST(n,iv)		\
+    {						\
+	.name		= n,			\
+	.type		= P9_PL_INT_VAL,	\
+	.int_value	= iv			\
+    }
+
 // declare an P9_PL_LONG_PTR with ID but no value
 #define _MIXP_PL_DECL_LONG_PTR(n,v)	\
     {					\
@@ -105,6 +113,23 @@ MIXP_PROPERTYLIST_DEF* mixp_propertylist_create_def(
 	.name		= n,		\
 	.type		= P9_PL_DIR,	\
 	.getFileHandle	= p		\
+    }
+
+// declare an P9_PL_FILE with an getFileHandle() proc
+#define _MIXP_PL_DECL_FILE_PROC(n,p)	\
+    {					\
+	.name		= n,		\
+	.type		= P9_PL_FILE,	\
+	.getFileHandle	= p		\
+    }
+
+// declare an P9_PL_FILE with an getFileHandle() proc and ID
+#define _MIXP_PL_DECL_FILE_PROC_ID(n,p,id)	\
+    {						\
+	.name		= n,			\
+	.id             = id,			\
+	.type		= P9_PL_FILE,		\
+	.getFileHandle	= p			\
     }
 
 // declare an end-of-list

@@ -1,0 +1,4 @@
+#!/bin/bash
+export PREFIX=/home/crosstool/.usr
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig"
+make PREFIX=$PREFIX && make PREFIX=$PREFIX install

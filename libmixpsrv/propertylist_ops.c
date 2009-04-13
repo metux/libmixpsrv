@@ -1,5 +1,5 @@
 
-// #define _DEBUG 
+// #define _DEBUG
 
 #include <errno.h>
 #include <fcntl.h>
@@ -8,6 +8,7 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <syslog.h>
 
 #include <9p-mixpsrv/types.h>
 #include <9p-mixpsrv/p9srv.h>
@@ -15,6 +16,24 @@
 
 #define PROPLISTPRIV(f)		((MIXP_PROPERTYLIST_DEF*)(f->priv.name))
 #define PROPENTPRIV(f)		((MIXP_PROPERTYLIST_DEF*)(f->priv.text))
+
+#ifdef _DEBUG
+#define __NO_OFFSET	\
+    if (offset)	\
+    {	\
+	fprintf(stderr, __FUNC__ "() does not support offsets");	\
+	return 0;	\
+    }
+#else
+#define __NO_OFFSET	\
+    if (offset)	return 0;
+#endif
+
+#ifdef _DEBUG
+#define DEBUGMSG(a...)	do { fprintf(stderr, __FUNC__ ##a); } while (0);
+#else
+#define DEBUGMSG(a...)
+#endif
 
 static MIXPSRV_FILE_HANDLE* mixp_propertylist_ops_lookup  (MIXPSRV_FILE_HANDLE* f, const char* name);
 static int                  mixp_propertylist_ops_stat    (MIXPSRV_FILE_HANDLE* f, MIXP_STAT* stat);
@@ -27,7 +46,7 @@ static int                  mixp_propertylist_entops_stat (MIXPSRV_FILE_HANDLE* 
 static long                 mixp_propertylist_entops_size (MIXPSRV_FILE_HANDLE* f);
 static int                  mixp_propertylist_entops_close(MIXPSRV_FILE_HANDLE* f);
 
-static MIXPSRV_FILE_OPS propertylist_ops = 
+static MIXPSRV_FILE_OPS propertylist_ops =
 {
     .lookup = mixp_propertylist_ops_lookup,
     .stat   = mixp_propertylist_ops_stat,
@@ -35,7 +54,7 @@ static MIXPSRV_FILE_OPS propertylist_ops =
     .close  = mixp_propertylist_ops_close
 };
 
-static MIXPSRV_FILE_OPS propertylist_entops = 
+static MIXPSRV_FILE_OPS propertylist_entops =
 {
     .read  = mixp_propertylist_entops_read,
     .write = mixp_propertylist_entops_write,
@@ -47,9 +66,8 @@ static MIXPSRV_FILE_OPS propertylist_entops =
 
 MIXPSRV_FILE_HANDLE* mixp_propertylist_create(const char* name, MIXP_PROPERTYLIST_DEF* pr)
 {
-#ifdef _DEBUG
-    printf("mixp_propertylist_create() name=\"%s\"\n", name);
-#endif
+    DEBUGMSG("name=\"%s\"\n", name);
+
     MIXPSRV_FILE_HANDLE* f = p9srv_get_file();
     f->name      = strdup(name);
     f->qtype     = P9_QTDIR;
@@ -62,11 +80,15 @@ MIXPSRV_FILE_HANDLE* mixp_propertylist_create(const char* name, MIXP_PROPERTYLIS
 
 static MIXPSRV_FILE_HANDLE* mixp_propertylist_createent(MIXP_PROPERTYLIST_DEF* pr, MIXP_PROPERTYLIST_ENT* ent)
 {
-#ifdef _DEBUG
-    printf("mixp_propertylist_createent() name=\"%s\"\n", ent->name);
-#endif
+    DEBUGMSG("name=\"%s\"\n", ent->name);
+
     if (ent->getFileHandle)
-	return ent->getFileHandle(pr,ent);
+    {
+	MIXPSRV_FILE_HANDLE *f2 = ent->getFileHandle(pr,ent);
+	if (!f2->name)
+	    f2->name = strdup(ent->name);
+	return f2;
+    }
 
     MIXPSRV_FILE_HANDLE* f = p9srv_get_file();
     f->name      = strdup(ent->name);
@@ -88,9 +110,7 @@ static int  mixp_propertylist_ops_close(MIXPSRV_FILE_HANDLE* f)
 
 static long mixp_propertylist_ops_size(MIXPSRV_FILE_HANDLE *f)
 {
-#ifdef _DEBUG
-    fprintf(stderr,"mixp_propertylist_ops_size() DUMMY\n");
-#endif
+    DEBUGMSG("DUMMY\n");
     return 0;
 }
 
@@ -223,19 +243,19 @@ static long mixp_propertylist_entops_write(MIXPSRV_FILE_HANDLE* f, long offset, 
 	fprintf(stderr,"FIXME: ixp_propertylist_entops_write() offset=%ld > 0 - not supported. sending EPERM\n", offset);
 	return -EPERM;
     }
-    
+
     MIXPSRV_IORESULT res;
-    
+
     switch (ent->type)
     {
-	case P9_PL_INT:		res = _write_intval(def, ent, text);	break; 
+	case P9_PL_INT:		res = _write_intval(def, ent, text);	break;
 	case P9_PL_INT_VAL:	res = _write_intval(def, ent, text); 	break;
 	case P9_PL_STRING:	res = _write_string(def, ent, text);	break;
 	default:
 	    fprintf(stderr,"ixp_propertylist_entops_write() unsupported ent type %ud - sending EPERM\n", ent->type);
 	    return -EPERM;
     }
-    
+
     if (res.err != 0)
 	return -res.err;
     else
@@ -348,9 +368,7 @@ static long _entops_read_dir(MIXP_PROPERTYLIST_DEF* def, MIXP_PROPERTYLIST_ENT* 
 
 static long _entops_read_string(MIXP_PROPERTYLIST_DEF* def, MIXP_PROPERTYLIST_ENT* ent, long offset, size_t size, void* buf)
 {
-#ifdef _DEBUG
-    printf("Reading from String\n");
-#endif
+    DEBUGMSG("Reading from String\n");
     // we've got an constant value
     if (ent->value)
     {
@@ -384,7 +402,7 @@ static long _entops_read_string(MIXP_PROPERTYLIST_DEF* def, MIXP_PROPERTYLIST_EN
     // evrything seems okay - call the getString() handler
 #ifdef _DEBUG
     fprintf(stderr,"reading string\n");
-#endif	    
+#endif
     def->ops.getString(def,ent,buf,size);
     return strlen(buf);
 }
@@ -457,7 +475,6 @@ static int mixp_propertylist_ops_stat (MIXPSRV_FILE_HANDLE* f, MIXP_STAT* stat)
 
     mixpsrv_default_ops_stat(f,stat);
 
-    
     if (def->uid)
 	stat->uid = strdup(def->uid);
 

@@ -139,12 +139,12 @@ void p9srv_ops_open(Ixp9Req *r)
 	switch (ret)
 	{
 	    case 0:
-		fprintf(stderr,"p9srv_ops_open() sending sending Ok\n");
+//		fprintf(stderr,"p9srv_ops_open() sending sending Ok\n");
 		ixp_respond(r, NULL);
 	    break;
 	    case -EPERM:
 	    default:
-		fprintf(stderr,"p9srv_ops_open(): sending permission denied (ret: %d)\n", ret);
+//		fprintf(stderr,"p9srv_ops_open(): sending permission denied (ret: %d)\n", ret);
 		ixp_respond(r, MIXPSRV_ERR_NOPERM);
 	}
 }
@@ -321,7 +321,7 @@ void p9srv_ops_read_dir(Ixp9Req *r, MIXPSRV_FILE_HANDLE* f)
 		}
 	}
 	r->ofcall->Rread.count = written;
-	printf("read_dir: written: %d offset=%d\n", written, offset);
+//	printf("read_dir: written: %d offset=%d\n", written, offset);
 	ixp_respond(r, NULL);
 }
 
@@ -398,7 +398,7 @@ MIXPSRV_FILE_HANDLE * p9srv_get_file()
 
 void p9srv_ops_attach(Ixp9Req *r)
 {	
-	printf("p9srv_ops_attach()\n");
+//	printf("p9srv_ops_attach()\n");
 
 	MIXPSRV_FILESERVER* fserv = (MIXPSRV_FILESERVER*)r->srv->aux;
 	if (fserv->magic != MIXPSRV_FILESERVER_MAGIC)

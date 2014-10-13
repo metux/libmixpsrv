@@ -331,8 +331,8 @@ void p9srv_ops_read_plain(Ixp9Req* r, MIXPSRV_FILE_HANDLE* f)
 	int ret;
 	ssize_t s = 12;
 
-	printf("Test: %u\n", s);
-	printf("! Tread.count=%u\n", r->ifcall->Tread.count);
+	printf("Test: %ld\n", (long)s);
+	printf("! Tread.count=%ld\n", (long)r->ifcall->Tread.count);
 	if (r->ifcall->Tread.count<0)
 	{
 	    printf("Tread.count < 0 !\n");
@@ -360,13 +360,13 @@ void p9srv_ops_read(Ixp9Req *r)
 
 	if (r->ifcall->Tread.count < 1)
 	{
-	    fprintf(stderr,"p9srv_ops_read_plain() count %d too small - tweaking to 1\n", r->ifcall->Tread.count);
-	    r->ifcall->Tread.count = 1;
+		fprintf(stderr,"p9srv_ops_read_plain() count %ld too small - tweaking to 1\n", (long)r->ifcall->Tread.count);
+		r->ifcall->Tread.count = 1;
 	}
 	if (r->ifcall->Tread.count > 32768)
 	{
-	    fprintf(stderr,"p9srv_ops_read_plain() count %d too large - tweaking to 32768\n", r->ifcall->Tread.count);
-	    r->ifcall->Tread.count = 32768;
+		fprintf(stderr,"p9srv_ops_read_plain() count %ld too large - tweaking to 32768\n", (long)r->ifcall->Tread.count);
+		r->ifcall->Tread.count = 32768;
 	}
 
 	f = r->fid->aux;

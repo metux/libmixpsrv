@@ -28,7 +28,7 @@ long mixpsrv_rostring_ops_read(MIXPSRV_FILE_HANDLE* f, long offset, size_t size,
     else if ((offset+size)>(f->priv.fd))
     {
 	size = (f->priv.fd) - offset;
-	fprintf(stderr,"ixp_rostring_ops_read() reducing size to %uld @ offset %ld size %d\n", size, offset, f->priv.fd);
+	fprintf(stderr,"ixp_rostring_ops_read() reducing size to %ld @ offset %ld size %d\n", (long)size, (long)offset, f->priv.fd);
     }
 
     memcpy(buf,(f->priv.name)+offset, size);

@@ -21,7 +21,7 @@ MIXPSRV_FILESERVER fileserver = {
 
 /* --------------------- root directory ops ----------------------- */
 
-MIXPSRV_FILE_HANDLE* rootops_lookup(MIXPSRV_FILE_HANDLE*parent, char* name)
+MIXPSRV_FILE_HANDLE* rootops_lookup(MIXPSRV_FILE_HANDLE*parent, const char* name)
 {
     printf("rootops_lookup() requested: \"%s\"\n",name);
 

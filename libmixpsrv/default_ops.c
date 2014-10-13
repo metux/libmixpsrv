@@ -41,8 +41,8 @@ long mixpsrv_default_ops_read(MIXPSRV_FILE_HANDLE* f, long offset, size_t size, 
 
 long mixpsrv_default_ops_write(MIXPSRV_FILE_HANDLE* f, long offset, size_t size, void* buffer)
 {
-    fprintf(stderr,"mixpsrv_default_ops_write() offset=%ld size=%uld\n", offset, size);
-    return -EPERM;
+	fprintf(stderr,"mixpsrv_default_ops_write() offset=%ld size=%ld\n", (long)offset, (long)size);
+	return -EPERM;
 }
 
 long mixpsrv_default_ops_size(MIXPSRV_FILE_HANDLE* f)

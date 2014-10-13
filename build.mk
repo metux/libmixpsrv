@@ -20,26 +20,26 @@ CFLAGS+=$(MIXP_CFLAGS)
 LDFLAGS+=$(MIXP_LIBS)
 
 %.pc:		%.pc.in
-	cat $< | \
+	@cat $< | \
 	    sed -e 's~@VERSION@~$(VERSION)~'       | \
 	    sed -e 's~@PREFIX@~$(PREFIX)~'         | \
 	    sed -e 's~@LIBDIR@~$(LIBDIR)~'         | \
 	    sed -e 's~@INCLUDEDIR@~$(INCLUDEDIR)~' > $@
 
 %.a:
-	$(AR) cr $@ $^ && $(RANLIB) $@
+	@$(AR) cr $@ $^ && $(RANLIB) $@
 
 #%.so:
 #	$(LD) -o $@ -soname $(SONAME) -shared $^
 
 %.so:
-	$(LD) -o $@ -lc $(LDFLAGS) -no-undefined -shared -soname $(SONAME) $^
+	@$(LD) -o $@ -lc $(LDFLAGS) -no-undefined -shared -soname $(SONAME) $^
 
 %.nopic.o:	%.c
-	$(CC) -o $@ -c $< $(CFLAGS)
+	@$(CC) -o $@ -c $< $(CFLAGS)
 
 %.pic.o:	%.c
-	$(CC) -fpic -o $@ -c $< $(CFLAGS)
+	@$(CC) -fpic -o $@ -c $< $(CFLAGS)
 
 dump:
 	@echo PREFIX=$(PREFIX)

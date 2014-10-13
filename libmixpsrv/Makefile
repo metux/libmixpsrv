@@ -12,8 +12,8 @@ LDFLAGS+=$(MIXP_LIBS) -lmixp -lc
 all:	info lib$(SONAME).a lib$(SONAME).so
 
 info:
-	echo "CFLAGS=$(CFLAGS)"
-	echo "LDFLAGS=$(LDFLAGS)"
+	@echo "CFLAGS=$(CFLAGS)"
+	@echo "LDFLAGS=$(LDFLAGS)"
 
 include ../build.mk
 
@@ -22,10 +22,9 @@ lib$(SONAME).a::	$(NOPIC_OBJ)
 lib$(SONAME).so::	$(PIC_OBJ)
 
 install:	lib$(SONAME).a	lib$(SONAME).so
-	mkdir -p $(DESTDIR)$(LIBDIR)
-	cp lib$(SONAME).a lib$(SONAME).so $(DESTDIR)$(LIBDIR)
-	chmod ugo+x $(DESTDIR)$(LIBDIR)/lib$(SONAME).so
+	@mkdir -p $(DESTDIR)$(LIBDIR)
+	@cp lib$(SONAME).a lib$(SONAME).so $(DESTDIR)$(LIBDIR)
+	@chmod ugo+x $(DESTDIR)$(LIBDIR)/lib$(SONAME).so
 
 clean:
-	rm -f *.o *.a *.so
-
+	@rm -f *.o *.a *.so

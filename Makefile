@@ -11,26 +11,25 @@ all:	lib	$(LIBNAME).pc	app
 include ./build.mk
 
 lib:
-	make -C $(LIBNAME)
+	@make -C $(LIBNAME)
 
 app:
-	make -C $(APPNAME)
+	@make -C $(APPNAME)
 
-install-lib:	
-	make -C $(LIBNAME) install
+install-lib:
+	@make -C $(LIBNAME) install
 
 install-pkgconfig:	$(LIBNAME).pc
-	mkdir -p $(DESTDIR)$(PKGCONFIGDIR)
-	cp $(LIBNAME).pc $(DESTDIR)$(PKGCONFIGDIR)
-	
+	@mkdir -p $(DESTDIR)$(PKGCONFIGDIR)
+	@cp $(LIBNAME).pc $(DESTDIR)$(PKGCONFIGDIR)
+
 install-includes:	include/$(INCNAME)/*.h
-	mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(INCNAME)
-	for i in include/$(INCNAME)/*.h ; do cp $$i $(DESTDIR)$(INCLUDEDIR)/$(INCNAME) ; done
+	@mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(INCNAME)
+	@for i in include/$(INCNAME)/*.h ; do cp $$i $(DESTDIR)$(INCLUDEDIR)/$(INCNAME) ; done
 
 install:	install-pkgconfig install-includes install-lib
 
-clean:	
-	rm -f *.o *.a *.so $(LIBNAME).pc
-	make -C $(LIBNAME) clean
-	make -C $(APPNAME) clean
-
+clean:
+	@rm -f *.o *.a *.so $(LIBNAME).pc
+	@make -C $(LIBNAME) clean
+	@make -C $(APPNAME) clean

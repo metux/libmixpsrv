@@ -9,17 +9,17 @@
 
 /* server operations - they're not much more than mux'es */
 /* fs.c */
-extern void p9srv_ops_attach(Ixp9Req *r);
-extern void p9srv_ops_clunk(Ixp9Req *r);
-extern void p9srv_ops_create(Ixp9Req *r);
-extern void p9srv_ops_flush(Ixp9Req *r);
-extern void p9srv_ops_freefid(IxpFid *f);
-extern void p9srv_ops_open(Ixp9Req *r);
-extern void p9srv_ops_read(Ixp9Req *r);
-extern void p9srv_ops_remove(Ixp9Req *r);
-extern void p9srv_ops_stat(Ixp9Req *r);
-extern void p9srv_ops_walk(Ixp9Req *r);
-extern void p9srv_ops_write(Ixp9Req *r);
+extern void p9srv_ops_attach(MIXP_REQUEST *r);
+extern void p9srv_ops_clunk(MIXP_REQUEST *r);
+extern void p9srv_ops_create(MIXP_REQUEST *r);
+extern void p9srv_ops_flush(MIXP_REQUEST *r);
+extern void p9srv_ops_freefid(MIXP_FID *f);
+extern void p9srv_ops_open(MIXP_REQUEST *r);
+extern void p9srv_ops_read(MIXP_REQUEST *r);
+extern void p9srv_ops_remove(MIXP_REQUEST *r);
+extern void p9srv_ops_stat(MIXP_REQUEST *r);
+extern void p9srv_ops_walk(MIXP_REQUEST *r);
+extern void p9srv_ops_write(MIXP_REQUEST *r);
 
 // extern void p9srv_clone_files(MIXPSRV_FILE_HANDLE *f);
 extern void p9srv_free_file(MIXPSRV_FILE_HANDLE*f);
@@ -28,7 +28,6 @@ extern MIXPSRV_FILE_HANDLE* p9srv_get_dir(const char* name, const char* priv_nam
 
 int p9srv_run_server(int fd, MIXPSRV_FILESERVER* fspriv);
 
-extern Ixp9Srv p9srv_ops;
+extern MIXP_SRV_OPS p9srv_ops;
 
 #endif
-

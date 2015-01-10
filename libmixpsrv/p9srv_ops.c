@@ -39,7 +39,7 @@ static void p9srv_clone_files(MIXPSRV_FILE_HANDLE *f) {
 		assert(f->nref++);
 }
 
-void p9srv_ops_walk(Ixp9Req *r)
+void p9srv_ops_walk(MIXP_REQUEST *r)
 {
 	MIXPSRV_FILE_HANDLE *f, *nf;
 	int i;
@@ -82,7 +82,7 @@ void p9srv_ops_walk(Ixp9Req *r)
 			f=f->next;
 			p9srv_free_file(nf);
 		}
-		ixp_respond(r, MIXPSRV_ERR_NOFILE);
+		mixp_respond(r, MIXPSRV_ERR_NOFILE);
 		return;
 	}
 	/* Remove refs for r->fid if no new fid */
@@ -98,7 +98,7 @@ void p9srv_ops_walk(Ixp9Req *r)
 	}
 	r->newfid->aux = f;
 	r->ofcall->Rwalk.nwqid = i;
-	ixp_respond(r, NULL);
+	mixp_respond(r, NULL);
 }
 
 unsigned int p9srv_ops_size(MIXPSRV_FILE_HANDLE *f)
@@ -107,7 +107,7 @@ unsigned int p9srv_ops_size(MIXPSRV_FILE_HANDLE *f)
 }
 
 /* This function needs to be seriously cleaned up */
-void p9srv_ops_write(Ixp9Req *r)
+void p9srv_ops_write(MIXP_REQUEST *r)
 {
 	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
 	int ret = mixpsrv_call_ops_write(f,r->ifcall->Twrite.offset,r->ifcall->Twrite.count,r->ifcall->Twrite.data);
@@ -117,12 +117,12 @@ void p9srv_ops_write(Ixp9Req *r)
 	    errno = -ret;
 	    perror("f->ops.write() returned an error: ");
 	    r->ofcall->Rwrite.count = 0;
-	    ixp_respond(r,MIXPSRV_ERR_NOPERM);
+	    mixp_respond(r,MIXPSRV_ERR_NOPERM);
 	}
 	else
 	{
 	    r->ofcall->Rwrite.count = ret;
-	    ixp_respond(r, NULL);
+	    mixp_respond(r, NULL);
 	}
 	return;
 
@@ -131,7 +131,7 @@ void p9srv_ops_write(Ixp9Req *r)
 	assert(!"Write called on an unwritable file");
 }
 
-void p9srv_ops_open(Ixp9Req *r)
+void p9srv_ops_open(MIXP_REQUEST *r)
 {
 	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
 
@@ -147,26 +147,26 @@ void p9srv_ops_open(Ixp9Req *r)
 	{
 	    case 0:
 		fprintf(stderr,"p9srv_ops_open() sending sending Ok\n");
-		ixp_respond(r, NULL);
+		mixp_respond(r, NULL);
 	    break;
 	    case -EPERM:
 	    default:
 		fprintf(stderr,"p9srv_ops_open(): sending permission denied (ret: %d)\n", ret);
-		ixp_respond(r, MIXPSRV_ERR_NOPERM);
+		mixp_respond(r, MIXPSRV_ERR_NOPERM);
 	}
 }
 
 // FIXME: create is not implemented yet
-void p9srv_ops_create(Ixp9Req *r)
+void p9srv_ops_create(MIXP_REQUEST *r)
 {
 //	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
 
 	/* XXX: This should be taken care of by the library */
-	ixp_respond(r, MIXPSRV_ERR_NOPERM);
+	mixp_respond(r, MIXPSRV_ERR_NOPERM);
 	return;
 }
 
-void p9srv_ops_remove(Ixp9Req *r)
+void p9srv_ops_remove(MIXP_REQUEST *r)
 {
 	MIXPSRV_FILE_HANDLE *f = r->fid->aux;
 	int ret = -EPERM;
@@ -176,35 +176,35 @@ void p9srv_ops_remove(Ixp9Req *r)
 
 	switch (ret)
 	{
-	    case '0':	 ixp_respond(r,NULL);			break;
-	    case -EPERM: ixp_respond(r,MIXPSRV_ERR_NOPERM);	break;
-	    default:     ixp_respond(r,MIXPSRV_ERR_NOPERM);	break;
+	    case '0':	 mixp_respond(r,NULL);			break;
+	    case -EPERM: mixp_respond(r,MIXPSRV_ERR_NOPERM);	break;
+	    default:     mixp_respond(r,MIXPSRV_ERR_NOPERM);	break;
 	}
 }
 
-void p9srv_ops_clunk(Ixp9Req *r)
+void p9srv_ops_clunk(MIXP_REQUEST *r)
 {
-	// We actually don't have to do anything here. ixp_respond() will take
+	// We actually don't have to do anything here. mixp_respond() will take
 	// care of all (calling freefid, etc).
-	ixp_respond(r, NULL);
+	mixp_respond(r, NULL);
 }
 
-void p9srv_ops_flush(Ixp9Req *r)
+void p9srv_ops_flush(MIXP_REQUEST *r)
 {
 	fprintf(stderr,"p9srv_ops_flush: flush not implemented yet\n");
-//	Ixp9Req **t;
+//	MIXP_REQUEST **t;
 
-//	for(t=&pending_event_reads; *t; t=(Ixp9Req **)&(*t)->aux)
+//	for(t=&pending_event_reads; *t; t=(MIXP_REQUEST **)&(*t)->aux)
 //		if(*t == r->oldreq) {
 //			*t = (*t)->aux;
-//			ixp_respond(r->oldreq, MIXPSRV_ERR_INTERRUPTED);
+//			mixp_respond(r->oldreq, MIXPSRV_ERR_INTERRUPTED);
 //			break;
 //		}
 
-	ixp_respond(r, NULL);
+	mixp_respond(r, NULL);
 }
 
-void p9srv_ops_freefid(IxpFid *f)
+void p9srv_ops_freefid(MIXP_FID *f)
 {
 	MIXPSRV_FILE_HANDLE *id, *tid;
 
@@ -231,7 +231,7 @@ void p9srv_free_file(MIXPSRV_FILE_HANDLE *f)
 	free_fileid = f;
 }
 
-void p9srv_ops_stat(Ixp9Req *r)
+void p9srv_ops_stat(MIXP_REQUEST *r)
 {
 	MIXP_STAT s;
 	unsigned int size;
@@ -253,10 +253,10 @@ void p9srv_ops_stat(Ixp9Req *r)
 	mixp_pstat(&msg, &s);
 
 	/* send response */
-	ixp_respond(r, NULL);
+	mixp_respond(r, NULL);
 }
 
-void p9srv_ops_read_dir(Ixp9Req *r, MIXPSRV_FILE_HANDLE* f)
+void p9srv_ops_read_dir(MIXP_REQUEST *r, MIXPSRV_FILE_HANDLE* f)
 {
 	MIXPSRV_FILE_HANDLE* tf      = f;
 	int         offset  = 0;
@@ -329,10 +329,10 @@ void p9srv_ops_read_dir(Ixp9Req *r, MIXPSRV_FILE_HANDLE* f)
 	}
 	r->ofcall->Rread.count = written;
 	printf("read_dir: written: %d offset=%d\n", written, offset);
-	ixp_respond(r, NULL);
+	mixp_respond(r, NULL);
 }
 
-void p9srv_ops_read_plain(Ixp9Req* r, MIXPSRV_FILE_HANDLE* f)
+void p9srv_ops_read_plain(MIXP_REQUEST *r, MIXPSRV_FILE_HANDLE* f)
 {
 //	MIXPSRV_FILE_HANDLE* tf;
 	int ret;
@@ -358,10 +358,10 @@ void p9srv_ops_read_plain(Ixp9Req* r, MIXPSRV_FILE_HANDLE* f)
 	else
 		r->ofcall->Rread.count = ret;
 
-	ixp_respond(r, NULL);
+	mixp_respond(r, NULL);
 }
 
-void p9srv_ops_read(Ixp9Req *r)
+void p9srv_ops_read(MIXP_REQUEST *r)
 {
 	MIXPSRV_FILE_HANDLE *f;
 
@@ -403,16 +403,16 @@ MIXPSRV_FILE_HANDLE * p9srv_get_file()
 	return temp;
 }
 
-void p9srv_ops_attach(Ixp9Req *r)
+void p9srv_ops_attach(MIXP_REQUEST *r)
 {	
 	printf("p9srv_ops_attach()\n");
 
 	MIXPSRV_FILESERVER* fserv = (MIXPSRV_FILESERVER*)r->srv->aux;
 	if (fserv->magic != MIXPSRV_FILESERVER_MAGIC)
-	    assert(!"Broken private data for server Ixp9Srv structure");
+	    assert(!"Broken private data for server MIXP_SRV_OPS structure");
 
 	if (!fserv->openRoot)
-	    assert(!"Missing openRoot() method in Ixp9Srv's private structure");
+	    assert(!"Missing openRoot() method in MIXP_SRV_OPS's private structure");
 
 	MIXPSRV_FILE_HANDLE * f = fserv->openRoot(fserv);
 
@@ -420,23 +420,23 @@ void p9srv_ops_attach(Ixp9Req *r)
 	r->fid->qid.type = f->qtype;
 	r->fid->qid.path = QID(f->type, 0);
 	r->ofcall->Rattach.qid = r->fid->qid;
-	ixp_respond(r, NULL);
+	mixp_respond(r, NULL);
 }
 
 int p9srv_run_server(int fd, MIXPSRV_FILESERVER* fspriv)
 {
-	Ixp9Srv   my_p9srv = p9srv_ops;
+	MIXP_SRV_OPS my_p9srv = p9srv_ops;
 	MIXP_SERVER my_srv;
 
 	memset(&my_srv,0,sizeof(my_srv));
 	fspriv->magic = MIXPSRV_FILESERVER_MAGIC;
 	my_p9srv.aux = fspriv;
-	ixp_listen(&my_srv, fd, &my_p9srv, serve_9pcon, NULL);
-	ixp_serverloop(&my_srv);
+	ixp_listen(&my_srv, fd, &my_p9srv, mixp_serve_conn, NULL);
+	mixp_server_loop(&my_srv);
 	return 0;
 }
 
-Ixp9Srv p9srv_ops = {
+MIXP_SRV_OPS p9srv_ops = {
 	.open    = p9srv_ops_open,
 	.walk    = p9srv_ops_walk,
 	.read    = p9srv_ops_read,

@@ -25,7 +25,7 @@ This file contains code that maybe should belong into libmixp
 */
 
 /* This should be moved to libixp */
-void mixp_write_buf(Ixp9Req *r, void *buf, unsigned int len) 
+void mixp_write_buf(MIXP_REQUEST *r, void *buf, unsigned int len)
 {
 	if(r->ifcall->Twrite.offset >= len)
 		return;
@@ -39,7 +39,7 @@ void mixp_write_buf(Ixp9Req *r, void *buf, unsigned int len)
 }
 
 /* This should be moved to libixp */
-void mixp_write_to_buf(Ixp9Req *r, void *buf, unsigned int *len, unsigned int max) 
+void mixp_write_to_buf(MIXP_REQUEST *r, void *buf, unsigned int *len, unsigned int max)
 {
 	unsigned int offset, count;
 
@@ -66,7 +66,7 @@ void mixp_write_to_buf(Ixp9Req *r, void *buf, unsigned int *len, unsigned int ma
 }
 
 /* This should be moved to libixp */
-void mixp_data_to_cstring(Ixp9Req *r) 
+void mixp_data_to_cstring(MIXP_REQUEST *r)
 {
 	unsigned int i;
 	i = r->ifcall->Twrite.count;

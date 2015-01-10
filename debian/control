@@ -1,0 +1,13 @@
+Source: libmixpsrv
+Section: libs
+Priority: extra
+Maintainer: Enrico Weigelt, metux IT service <weigelt@metux.net>
+Standards-Version: 3.9.3
+Build-Depends: debhelper (>= 7), pkg-config, libmixp
+
+Package: libmixpsrv
+Architecture: any
+Pre-Depends: debconf
+Depends:  ${misc:Depends}
+Description: small 9P server library
+

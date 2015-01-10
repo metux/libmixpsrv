@@ -1,0 +1,5 @@
+libmixpsrv (1.0.2-trusty0) precise; urgency=low
+
+  * Packaging for Ubuntu trusty
+
+ -- Enrico Weigelt, metux IT service <weigelt@metux.de>  Sat, 10 Jan 2014 14:36:00 +0100

@@ -13,6 +13,13 @@
 
 #include <9p-mixp/mixp.h>
 #include <9p-mixp/convert.h>
+#include <9p-mixp/fcall.h>
+#include <9p-mixp/fid.h>
+#include <9p-mixp/msgs.h>
+#include <9p-mixp/stat.h>
+#include <9p-mixp/server.h>
+#include <9p-mixp/srv_ops.h>
+#include <9p-mixp/request.h>
 #include <9p-mixpsrv/types.h>
 #include <9p-mixpsrv/p9srv.h>
 #include <9p-mixpsrv/prototypes.h>

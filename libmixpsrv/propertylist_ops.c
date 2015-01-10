@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
+#include <9p-mixp/stat.h>
+#include <9p-mixp/bits.h>
 #include <9p-mixpsrv/types.h>
 #include <9p-mixpsrv/p9srv.h>
 #include <9p-mixpsrv/propertylist_ops.h>

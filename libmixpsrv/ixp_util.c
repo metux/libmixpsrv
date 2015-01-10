@@ -11,6 +11,9 @@
 #include <stdio.h>
 
 #include <9p-mixp/mixp.h>
+#include <9p-mixp/fcall.h>
+#include <9p-mixp/request.h>
+#include <9p-mixp/fid.h>
 #include <9p-mixpsrv/types.h>
 #include <9p-mixpsrv/prototypes.h>
 #include <9p-mixpsrv/errors.h>

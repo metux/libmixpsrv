@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <9p-mixp/mixp.h>
+#include <9p-mixp/stat.h>
+#include <9p-mixp/bits.h>
 #include <9p-mixpsrv/types.h>
 #include <9p-mixpsrv/default_ops.h>
 #include <9p-mixpsrv/call_ops.h>

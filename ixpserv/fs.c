@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include <9p-mixp/mixp.h>
+#include <9p-mixp/fcall.h>
 #include <9p-mixpsrv/types.h>
 #include <9p-mixpsrv/p9srv.h>
 #include <9p-mixpsrv/prototypes.h>

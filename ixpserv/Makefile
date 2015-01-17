@@ -12,7 +12,7 @@ all:		ixpserv
 
 include ../build.mk
 
-ixpserv:	fs.o ../libmixpsrv/libmixpsrv.a
+ixpserv:	fs.nopic.o ../libmixpsrv/libmixpsrv.a
 	@$(CC) -o $@ $^ $(MIXP_CFLAGS) $(MIXP_LIBS) $(CFLAGS)
 
 clean:

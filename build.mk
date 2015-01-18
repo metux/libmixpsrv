@@ -17,7 +17,7 @@ MIXP_LIBS?=`$(PKG_CONFIG) --libs libmixp`
 MIXP_CFLAGS?=`$(PKG_CONFIG) --cflags libmixp` -Wall
 
 CFLAGS+=$(MIXP_CFLAGS)
-LDFLAGS+=$(MIXP_LIBS)
+LIBS+=$(MIXP_LIBS)
 
 %.pc:		%.pc.in
 	@cat $< | \
@@ -33,7 +33,7 @@ LDFLAGS+=$(MIXP_LIBS)
 #	$(LD) -o $@ -soname $(SONAME) -shared $^
 
 %.so:
-	@$(LD) -o $@ -lc $(LDFLAGS) -no-undefined -shared -soname $(SONAME) $^
+	@$(LD) -o $@ -shared $^ -soname $(SONAME) -lc -no-undefined $(LIBS)
 
 %.nopic.o:	%.c
 	@$(CC) -o $@ -c $< $(CFLAGS)
